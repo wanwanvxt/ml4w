@@ -1,0 +1,13 @@
+*
+
+!README.md
+!.editorconfig
+!.gitignore
+
+!hypr/
+!hypr/**
+
+!kitty/
+!kitty/**
+
+!code-flags.conf
