@@ -4,6 +4,8 @@
 !.editorconfig
 !.gitignore
 
+!saekano.jpg
+
 !hypr/
 !hypr/**
 
