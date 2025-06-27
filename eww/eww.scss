@@ -1,0 +1,142 @@
+* {
+  all: unset;
+  font-family: Agave, 'Agave Nerd Font', monospace;
+}
+
+tooltip {
+  color: #bfc9db;
+  background-color: #0f0f17;
+  border-radius: 8px;
+  border: 1px solid #00ff99;
+}
+
+box.taskbar {
+  background-color: #0f0f17;
+
+  box.taskbar_left {
+    margin-left: 10px;
+
+    box.workspaces {
+      button.workspace_btn {
+        color: #3e424f;
+        font-size: 24px;
+        &.occupied {
+          color: #bfc9db;
+        }
+      }
+    }
+  }
+
+  box.taskbar_center {
+    label.last_title {
+      color: #bfc9db;
+      font-size: 18px;
+    }
+  }
+
+  box.taskbar_right {
+    margin-right: 10px;
+
+    label.seprate {
+      color: #3e424f;
+      font-weight: bolder;
+      font-size: 20px;
+      margin: 0px 5px;
+    }
+
+    box.brightness {
+      margin: 0px 15px 0px 10px;
+
+      button.brightness_icon {
+        color: #e4c9af;
+        font-size: 18px;
+      }
+
+      scale.brightness_slide {
+        margin-left: 15px;
+
+        trough {
+          background-color: #22242b;
+          border-radius: 8px;
+          min-height: 6px;
+
+          highlight {
+            background-image: linear-gradient(to right, #e4c9af 30%, #f2cdcd 50%, #e0b089 100% *50);
+            border-radius: 10px;
+            color: red;
+          }
+        }
+      }
+    }
+
+    box.volume {
+      margin: 0px 10px;
+
+      button.volume_popup {
+        color: #bfc9db;
+        font-size: 18px;
+      }
+
+      scale.volume_sink_slide {
+        margin-left: 10px;
+
+        trough {
+          background-color: #22242b;
+          border-radius: 8px;
+          min-height: 6px;
+
+          highlight {
+            background-image: linear-gradient(to right, #afcee0 30%, #a1bdce 50%, #77a5bf 100% *50);
+            border-radius: 10px;
+            color: red;
+          }
+        }
+      }
+    }
+
+    box.wifi {
+      margin: 0px 10px;
+
+      button.wifi_icon {
+        color: #a1bdce;
+        font-size: 18px;
+      }
+
+      label.wifi_essid {
+        color: #a1bdce;
+        font-size: 16px;
+        margin-left: 15px;
+      }
+    }
+
+    circular-progress.battery {
+      background-color: #38384d;
+      color: #afbea2;
+      margin: 0px 5px;
+
+      label {
+        color: #bfc9db;
+        font-size: 14px;
+        margin: 10px;
+      }
+    }
+
+    box.time {
+      color: #bfc9db;
+      font-size: 18px;
+      margin-left: 5px;
+
+      label.clock_seprate {
+        margin: 0px 2px;
+      }
+
+      box.date {
+        margin-left: 10px;
+
+        label.date_icon {
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+}
