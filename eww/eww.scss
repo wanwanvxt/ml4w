@@ -1,6 +1,9 @@
 * {
-  all: unset;
   font-family: Agave, 'Agave Nerd Font', monospace;
+}
+
+tooltip, label, button, scale, scale * {
+  all: unset;
 }
 
 tooltip {
@@ -18,6 +21,7 @@ box.taskbar {
 
     box.workspaces {
       button.workspace_btn {
+        all: unset;
         color: #3e424f;
         font-size: 24px;
         &.occupied {
@@ -44,6 +48,47 @@ box.taskbar {
       margin: 0px 5px;
     }
 
+    box.system_tray {
+      margin: 0px 10px;
+
+      menu {
+        all: unset;
+        background-color: #0f0f17;
+        border-radius: 8px;
+        border: 1px solid #3e424f;
+
+        separator {
+          all: unset;
+          border-top: 1px solid #3e424f;
+        }
+
+        menuitem {
+          all: unset;
+          color: #bfc9db;
+          font-size: 16px;
+          padding: 8px;
+
+          &:first-child {
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+          }
+
+          &:last-child {
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+          }
+
+          &:hover {
+            background-color: #005db0;
+          }
+
+          radio, arrow {
+            color: #bfc9db;
+          }
+        }
+      }
+    }
+
     box.brightness {
       margin: 0px 15px 0px 10px;
 
@@ -63,7 +108,6 @@ box.taskbar {
           highlight {
             background-image: linear-gradient(to right, #e4c9af 30%, #f2cdcd 50%, #e0b089 100% *50);
             border-radius: 10px;
-            color: red;
           }
         }
       }
@@ -88,14 +132,13 @@ box.taskbar {
           highlight {
             background-image: linear-gradient(to right, #afcee0 30%, #a1bdce 50%, #77a5bf 100% *50);
             border-radius: 10px;
-            color: red;
           }
         }
       }
     }
 
     box.wifi {
-      margin: 0px 10px;
+      margin: 0px 15px 0px 10px;
 
       button.wifi_icon {
         color: #a1bdce;
@@ -112,7 +155,7 @@ box.taskbar {
     circular-progress.battery {
       background-color: #38384d;
       color: #afbea2;
-      margin: 0px 5px;
+      margin: 0px 10px;
 
       label {
         color: #bfc9db;
@@ -124,7 +167,7 @@ box.taskbar {
     box.time {
       color: #bfc9db;
       font-size: 18px;
-      margin-left: 5px;
+      margin-left: 10px;
 
       label.clock_seprate {
         margin: 0px 2px;
