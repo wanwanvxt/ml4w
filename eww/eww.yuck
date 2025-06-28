@@ -33,6 +33,11 @@
   (label :class "last_title" :text "${v_active_ws.lastwindowtitle}")
 )
 
+;; system tray
+(defwidget system_tray []
+  (systray :class "system_tray" :orientation "h" :spacing 10 :space-evenly false :icon-size 16 :prepend-new true)
+)
+
 ;; brightness
 (defwidget brightness []
   (eventbox :onhover "eww update v_brightness_reveal=true"
@@ -113,6 +118,8 @@
 )
 (defwidget taskbar_right []
   (box :class "taskbar_right" :orientation "h" :spacing 0 :space-evenly false :halign "end"
+    (system_tray)
+    (label :class "seprate" :text "|")
     (brightness)
     (volume)
     (wifi)
