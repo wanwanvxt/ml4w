@@ -1,185 +1,155 @@
+$dark: #1a110f;
+$light: #daf1e6;
+$orange: #ff9a3c;
+$yellow: #f3e2a7;
+$green: #00ff99;
+$blue: #1e90ff;
+
+$tooltip_text_col: $light;
+$tooltip_bg_col: $dark;
+$tooltip_border_col: $light;
+
+$workspaces_bg_col: $light;
+$workspace_btn_bg_col: $light;
+$workspace_btn_text_col: $light;
+
+$packages_bg_col: $light;
+$packages_content_bg_col: $orange;
+$packages_text_col: $light;
+
+$systray_bg_col: $light;
+$systray_content_bg_col: $blue;
+$systray_text_col: $light;
+
+$sysstatus_bg_col: $light;
+$sysstatus_content_bg_col: $yellow;
+$sysstatus_text_col: $dark;
+
+$time_bg_col: $light;
+$time_text_col: $dark;
+
 * {
-  font-family: Agave, 'Agave Nerd Font', monospace;
+  font-family: 'Noto Sans', 'Font Awesome 6 Brands', 'Font Awesome 6 Free', 'Font Awesome 6 Free Solid', sans-serif;
 }
 
-tooltip, label, button, scale, scale * {
+tooltip,
+label,
+button,
+scale,
+scale *,
+window.taskbar {
   all: unset;
 }
 
 tooltip {
-  color: #bfc9db;
-  background-color: #0f0f17;
-  border-radius: 8px;
-  border: 1px solid #00ff99;
+  padding: 10px 5px;
+  font-style: normal;
+  font-weight: normal;
+  color: $tooltip_text_col;
+  background-color: $tooltip_bg_col;
+  border: 1px solid $tooltip_border_col;
+  border-radius: 4px;
+  opacity: 0.9;
 }
 
 box.taskbar {
-  background-color: #0f0f17;
+  padding: 8px 8px 0px;
 
-  box.taskbar_left {
-    margin-left: 10px;
+  box.modules_left,
+  box.modules_center,
+  box.modules_right {
+    background-color: transparent;
+  }
+}
 
-    box.workspaces {
-      button.workspace_btn {
-        all: unset;
-        color: #3e424f;
-        font-size: 24px;
-        &.occupied {
-          color: #bfc9db;
-        }
-      }
+box.workspaces {
+  padding: 0px 2px;
+  background-color: $light;
+  border-radius: 4px;
+
+  button.workspace_btn {
+    min-width: 18px;
+    margin: 3px 2px;
+    padding: 0px 6px;
+    font-style: normal;
+    font-weight: bold;
+    color: $light;
+    background-color: $dark;
+    border-radius: 4px;
+    opacity: 0.4;
+
+    &.occupied {
+      opacity: 0.7;
+    }
+
+    &.active {
+      min-width: 30px;
+      background-color: $dark;
+      opacity: 1;
     }
   }
+}
 
-  box.taskbar_center {
-    label.last_title {
-      color: #bfc9db;
-      font-size: 18px;
+box.packages_wrapper {
+  padding: 0px 2px;
+  background-color: $packages_bg_col;
+  border-radius: 4px;
+
+  label.packages {
+    margin: 3px 2px;
+    padding: 0px 8px;
+    font-style: normal;
+    font-weight: normal;
+    color: $packages_text_col;
+    background-color: $packages_content_bg_col;
+    border-radius: 4px;
+  }
+}
+
+box.systray_wrapper {
+  padding: 0px 2px;
+  background-color: $systray_bg_col;
+  border-radius: 4px;
+
+  box.systray {
+    margin: 3px 2px;
+    padding: 0px 8px;
+    font-style: normal;
+    font-weight: normal;
+    color: $systray_text_col;
+    background-color: $systray_content_bg_col;
+    border-radius: 4px;
+  }
+}
+
+box.sysstatus_wrapper {
+  padding: 0px 2px;
+  background-color: $sysstatus_bg_col;
+  border-radius: 4px;
+
+  box.sysstatus {
+    margin: 3px 2px;
+    padding: 0px 8px;
+    background-color: $sysstatus_content_bg_col;
+    border-radius: 4px;
+
+    label.battery {
+      font-style: normal;
+      font-weight: normal;
+      color: $sysstatus_text_col;
     }
   }
+}
 
-  box.taskbar_right {
-    margin-right: 10px;
+box.time {
+  padding: 0px 8px;
+  font-style: normal;
+  font-weight: bold;
+  color: $time_text_col;
+  background-color: $time_bg_col;
+  border-radius: 4px;
 
-    label.seprate {
-      color: #3e424f;
-      font-weight: bolder;
-      font-size: 20px;
-      margin: 0px 5px;
-    }
-
-    box.system_tray {
-      margin: 0px 10px;
-
-      menu {
-        all: unset;
-        background-color: #0f0f17;
-        border-radius: 8px;
-        border: 1px solid #3e424f;
-
-        separator {
-          all: unset;
-          border-top: 1px solid #3e424f;
-        }
-
-        menuitem {
-          all: unset;
-          color: #bfc9db;
-          font-size: 16px;
-          padding: 8px;
-
-          &:first-child {
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-          }
-
-          &:last-child {
-            border-bottom-left-radius: 8px;
-            border-bottom-right-radius: 8px;
-          }
-
-          &:hover {
-            background-color: #005db0;
-          }
-
-          radio, arrow {
-            color: #bfc9db;
-          }
-        }
-      }
-    }
-
-    box.brightness {
-      margin: 0px 15px 0px 10px;
-
-      button.brightness_icon {
-        color: #e4c9af;
-        font-size: 18px;
-      }
-
-      scale.brightness_slide {
-        margin-left: 15px;
-
-        trough {
-          background-color: #22242b;
-          border-radius: 8px;
-          min-height: 6px;
-
-          highlight {
-            background-image: linear-gradient(to right, #e4c9af 30%, #f2cdcd 50%, #e0b089 100% *50);
-            border-radius: 10px;
-          }
-        }
-      }
-    }
-
-    box.volume {
-      margin: 0px 10px;
-
-      button.volume_popup {
-        color: #bfc9db;
-        font-size: 18px;
-      }
-
-      scale.volume_sink_slide {
-        margin-left: 10px;
-
-        trough {
-          background-color: #22242b;
-          border-radius: 8px;
-          min-height: 6px;
-
-          highlight {
-            background-image: linear-gradient(to right, #afcee0 30%, #a1bdce 50%, #77a5bf 100% *50);
-            border-radius: 10px;
-          }
-        }
-      }
-    }
-
-    box.wifi {
-      margin: 0px 15px 0px 10px;
-
-      button.wifi_icon {
-        color: #a1bdce;
-        font-size: 18px;
-      }
-
-      label.wifi_essid {
-        color: #a1bdce;
-        font-size: 16px;
-        margin-left: 15px;
-      }
-    }
-
-    circular-progress.battery {
-      background-color: #38384d;
-      color: #afbea2;
-      margin: 0px 10px;
-
-      label {
-        color: #bfc9db;
-        font-size: 14px;
-        margin: 10px;
-      }
-    }
-
-    box.time {
-      color: #bfc9db;
-      font-size: 18px;
-      margin: 0px 10px;
-
-      label.clock_seprate {
-        margin: 0px 2px;
-      }
-
-      box.date {
-        margin-left: 10px;
-
-        label.date_icon {
-          margin-right: 10px;
-        }
-      }
-    }
+  label.time_sep {
+    margin: 0px 4px;
   }
 }

@@ -1,143 +1,83 @@
-;; variables
+;; VARIABLES
 (deflisten v_workspaces :initial "[]" "scripts/workspaces.sh")
-(deflisten v_active_ws :initial "{}" "scripts/workspaces.sh --active")
-(defpoll v_brightness :interval "500ms" :initial "255" "brightnessctl get")
-(defpoll v_sink_volume :interval "500ms" :initial "100" "wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print $2*100}'")
-(defpoll v_wifi_essid :interval "10s" :initial "me" "nmcli device | awk '$1 == \"wlp4s0\" { for (i=4; i<=NF; i++) printf $i (i<NF ? \" \": \"\") }'")
-(defpoll v_wifi_connected :interval "10s" :initial "connected" "nmcli device | awk '$1 == \"wlp4s0\" {print $3}'")
-(defpoll v_battery :interval "10s" :initial "100" "scripts/battery.sh")
-(defpoll v_battery_status :interval "10s" :initial "Discharging" "scripts/battery.sh --status")
-(defpoll v_clock_hour :interval "1s" :initial "00" "date +%H")
-(defpoll v_clock_minute :interval "1s" :initial "00" "date +%M")
-(defpoll v_date :interval "5m" :initial "Sun 01/01/2000" "date '+%a %d/%m/%Y'")
-(defvar v_brightness_reveal false)
-(defvar v_volume_reveal false)
-(defvar v_wifi_reveal false)
+(defpoll v_updatable_packages :interval "20m" :initial "0" "yay -Qu | wc -l")
+(defpoll v_clock :interval "1s" :initial "00:00" "date '+%H:%M'")
+(defpoll v_date :interval "1s" :initial "Sun 01/01/2000" "date '+%a %d/%m/%Y'")
 (defvar v_time_reveal false)
 
+;; MODULES
 ;; workspaces
 (defwidget workspaces []
   (box :class "workspaces" :orientation "h" :spacing 0 :space-evenly false
     (for ws in v_workspaces
-      (button :class `${ws.windows > 0 || ws.id == v_active_ws.id ? "workspace_btn occupied" : "workspace_btn"}`
-        :width 40 :tooltip "Workspace ${ws.id}"
+      (button :class `${(ws.active ? "active " : " ") + (ws.windows > 0 ? "occupied " : " ") + "workspace_btn"}`
+        :tooltip "Workspace ${ws.name}"
         :onclick "hyprctl dispatch workspace ${ws.id}"
-        `${ws.id == v_active_ws.id ? "" : ""}`
+       "${ws.name}"
       )
     )
   )
 )
-
-;; last title
-(defwidget last_title []
-  (label :class "last_title" :text "${v_active_ws.lastwindowtitle}")
+;; updatable packages
+(defwidget packages []
+  (box :class "packages_wrapper" :orientation "h" :spacing 0 :space-evenly false
+    (label :class "packages" :tooltip "${v_updatable_packages} updatable package(s)" :text " ${v_updatable_packages}")
+  )
 )
-
 ;; system tray
 (defwidget system_tray []
-  (systray :class "system_tray" :orientation "h" :spacing 10 :space-evenly false :icon-size 16 :prepend-new true)
+  (box :class "systray_wrapper" :orientation "h" :spacing 0 :space-evenly false
+    (systray :class "systray" :orientation "h" :spacing 8 :icon-size 16)
+  )
 )
-
-;; brightness
-(defwidget brightness []
-  (eventbox :onhover "eww update v_brightness_reveal=true"
-    :onhoverlost "eww update v_brightness_reveal=false"
-    (box :class "brightness" :orientation "h" :spacing 0 :space-evenly false
-      :tooltip "Brightness on ${v_brightness}"
-      (button :class "brightness_icon" "")
-      (revealer :transition "slideleft" :reveal v_brightness_reveal :duration "350ms"
-        (scale :class "brightness_slide" :orientation "h" :value v_brightness :min 0 :max 256 :round-digits 0
-          :width 75 :onchange "brightnessctl set -n2 {}"
+;; system status
+(defwidget system_status []
+  (box :class "sysstatus_wrapper" :orientation "h" :spacing 0 :space-evenly false
+    (box :class "sysstatus" :orientation "h" :spacing 8 :space-evenly false
+      (eventbox :onhover "eww update v_volume_reveal=true" :onhoverlost "eww update v_volume_reveal=false"
+        (box :class "volume" :orientation "h" :spacing 0 :space-evenly false
+          (label :class "volume_icon" :tooltip "Volume on {}%" :text "")
         )
       )
     )
   )
 )
-
-;; volume
-(defwidget volume []
-  (eventbox :onhover "eww update v_volume_reveal=true" :onhoverlost "eww update v_volume_reveal=false"
-    (box :class "volume" :orientation "h" :spacing 0 :space-evenly false
-      :tooltip "Volume on ${v_sink_volume}%"
-      (button :class "volume_popup" "")
-      (revealer :transition "slideleft" :reveal v_volume_reveal :duration "350ms"
-        (scale :class "volume_sink_slide" :orientation "h" :value v_sink_volume :min 0 :max 101 :round-digits 2
-          :width 75 :onchange "wpctl set-volume @DEFAULT_AUDIO_SINK@ -l 1 $(awk 'BEGIN {print {}/100}')"
-        )
-      )
-    )
-  )
-)
-
-;; wifi
-(defwidget wifi []
-  (eventbox :onhover "eww update v_wifi_reveal=true" :onhoverlost "eww update v_wifi_reveal=false"
-    (box :class "wifi" :orientation "h" :spacing 0 :space-evenly false
-      (button :class "wifi_icon" `${v_wifi_connected == "connected" ? "󰤨" : "󰤮"}`)
-      (revealer :transition "slideleft" :reveal v_wifi_reveal :duration "350ms"
-        (label :class "wifi_essid" :text v_wifi_essid)
-      )
-    )
-  )
-)
-
-;; battery
-(defwidget battery []
-  (circular-progress :class "battery" :thickness 4 :tooltip "Battery on ${v_battery}% (${v_battery_status})"
-    :value v_battery ""
-  )
-)
-
 ;; time
 (defwidget time []
   (eventbox :onhover "eww update v_time_reveal=true" :onhoverlost "eww update v_time_reveal=false"
     (box :class "time" :orientation "h" :spacing 0 :space-evenly false
-      (label :class "clock_hour" :text v_clock_hour)
-      (label :class "clock_seprate" :text ":")
-      (label :class "clock_minute" :text v_clock_minute)
+      (label :class "time_clock" :show-truncated false :text "${v_clock}")
       (revealer :transition "slideleft" :reveal v_time_reveal :duration "350ms"
-        (box :class "date" :orientation "h" :spacing 0 :space-evenly false
-          (label :class "date_icon" :text "󰨲")
-          (label :class "date" :text v_date)
+        (box :orientation "h" :spacing 0 :space-evenly false
+          (label :class "time_sep" :text "-")
+          (label :class "time_date" :show-truncated false :text "${v_date}")
         )
       )
     )
   )
 )
 
-;; taskbar
-(defwidget taskbar_left []
-  (box :class "taskbar_left" :orientation "h" :spacing 0 :space-evenly false :halign "start"
-    (workspaces)
-  )
-)
-(defwidget taskbar_center []
-  (box :class "taskbar_center" :orientation "h" :spacing 0 :space-evenly false :halign "center"
-    (last_title)
-  )
-)
-(defwidget taskbar_right []
-  (box :class "taskbar_right" :orientation "h" :spacing 0 :space-evenly false :halign "end"
-    (system_tray)
-    (label :class "seprate" :text "|")
-    (brightness)
-    (volume)
-    (wifi)
-    (label :class "seprate" :text "|")
-    (battery)
-    (label :class "seprate" :text "|")
-    (time)
-  )
+;;
+(defwidget modules_wrapper [class halign gaps]
+  (box :class class :orientation "h" :spacing gaps :space-evenly false :halign halign (children))
 )
 
-;; windows
+;; WINDOWS
 (defwindow taskbar
-  :monitor 0 :stacking "bg"
-  :geometry (geometry :x "0px" :y "0px" :width "100%" :height "40px" :anchor "top center")
-  :exclusive true :focusable false
-  (box :class "taskbar" :orientation "h" :spacing 20 :height 40
-    (taskbar_left)
-    (taskbar_center)
-    (taskbar_right)
+  :monitor 0 :geometry (geometry :x "0px" :y "0px" :width "100%" :height "38px" :anchor "top center")
+  :stacking "bg" :exclusive true :focusable false
+  (box :class "taskbar" :orientation "h" :spacing 20 :space-evenly true
+    (modules_wrapper :class "modules_left" :halign "start" :gaps 8
+      (workspaces)
+    )
+    (modules_wrapper :class "modules_center" :halign "center" :gaps 8
+      (label :text "${EWW_BATTERY}" :style "color: black")
+    )
+    (modules_wrapper :class "modules_right" :halign "end" :gaps 8
+      (packages)
+      (system_tray)
+      (system_status)
+      (time)
+    )
   )
 )
