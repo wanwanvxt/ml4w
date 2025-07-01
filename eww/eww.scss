@@ -5,30 +5,6 @@ $yellow: #f3e2a7;
 $green: #00ff99;
 $blue: #1e90ff;
 
-$tooltip_text_col: $light;
-$tooltip_bg_col: $dark;
-$tooltip_border_col: $light;
-
-$workspaces_bg_col: $light;
-$workspace_btn_bg_col: $light;
-$workspace_btn_text_col: $light;
-
-$packages_bg_col: $light;
-$packages_content_bg_col: $orange;
-$packages_text_col: $light;
-
-$systray_bg_col: $light;
-$systray_content_bg_col: $blue;
-$systray_text_col: $light;
-
-$brightness_bg_col: $light;
-$brightness_text_col: $dark;
-$brightness_scale_trough_bg_col: rgba($dark, 0.4);
-$brightness_scale_highlight_bg_col: linear-gradient(to right, rgba($dark, 0.5) 20%, rgba($dark, 0.7) 50%, $dark 100%);
-
-$time_bg_col: $light;
-$time_text_col: $dark;
-
 * {
   font-family: 'Noto Sans', 'Font Awesome 6 Brands', 'Font Awesome 6 Free', 'Font Awesome 6 Free Solid', sans-serif;
   font-size: 14px;
@@ -47,9 +23,9 @@ tooltip {
   padding: 10px 5px;
   font-style: normal;
   font-weight: normal;
-  color: $tooltip_text_col;
-  background-color: $tooltip_bg_col;
-  border: 1px solid $tooltip_border_col;
+  color: $light;
+  background-color: $dark;
+  border: 1px solid $green;
   border-radius: 4px;
   opacity: 0.9;
 }
@@ -59,13 +35,16 @@ box.taskbar {
 
   box.modules {
     background-color: transparent;
+
+    .module {
+      border-radius: 4px;
+      background-color: $light;
+    }
   }
 }
 
 box.workspaces {
   padding: 0px 2px;
-  background-color: $light;
-  border-radius: 4px;
 
   button.workspace_btn {
     min-width: 18px;
@@ -92,32 +71,28 @@ box.workspaces {
 
 box.packages_wrapper {
   padding: 0px 2px;
-  background-color: $packages_bg_col;
-  border-radius: 4px;
 
   label.packages {
     margin: 3px 2px;
     padding: 0px 8px;
     font-style: normal;
     font-weight: bold;
-    color: $packages_text_col;
-    background-color: $packages_content_bg_col;
+    color: $light;
+    background-color: $orange;
     border-radius: 4px;
   }
 }
 
 box.systray_wrapper {
   padding: 0px 2px;
-  background-color: $systray_bg_col;
-  border-radius: 4px;
 
   box.systray {
     margin: 3px 2px;
     padding: 0px 8px;
     font-style: normal;
     font-weight: normal;
-    color: $systray_text_col;
-    background-color: $systray_content_bg_col;
+    color: $light;
+    background-color: $blue;
     border-radius: 4px;
   }
 }
@@ -128,9 +103,7 @@ box.battery {
   padding: 0px 8px;
   font-style: normal;
   font-weight: bold;
-  color: $brightness_text_col;
-  background-color: $brightness_bg_col;
-  border-radius: 4px;
+  color: $dark;
 
   label.percentage {
     margin-left: 4px;
@@ -141,11 +114,11 @@ box.battery {
 
     trough {
       min-height: 8px;
-      background-color: $brightness_scale_trough_bg_col;
+      background-color: rgba($dark, 0.4);
       border-radius: 8px;
 
       highlight {
-        background-image: $brightness_scale_highlight_bg_col;
+        background-color: $dark;
         border-radius: 8px;
       }
     }
@@ -156,9 +129,7 @@ box.time {
   padding: 0px 8px;
   font-style: normal;
   font-weight: bold;
-  color: $time_text_col;
-  background-color: $time_bg_col;
-  border-radius: 4px;
+  color: $dark;
 
   label.time_sep {
     margin: 0px 4px;
