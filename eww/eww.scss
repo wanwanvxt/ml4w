@@ -21,15 +21,17 @@ $systray_bg_col: $light;
 $systray_content_bg_col: $blue;
 $systray_text_col: $light;
 
-$sysstatus_bg_col: $light;
-$sysstatus_content_bg_col: $yellow;
-$sysstatus_text_col: $dark;
+$brightness_bg_col: $light;
+$brightness_text_col: $dark;
+$brightness_scale_trough_bg_col: rgba($dark, 0.4);
+$brightness_scale_highlight_bg_col: linear-gradient(to right, rgba($dark, 0.5) 20%, rgba($dark, 0.7) 50%, $dark 100%);
 
 $time_bg_col: $light;
 $time_text_col: $dark;
 
 * {
   font-family: 'Noto Sans', 'Font Awesome 6 Brands', 'Font Awesome 6 Free', 'Font Awesome 6 Free Solid', sans-serif;
+  font-size: 14px;
 }
 
 tooltip,
@@ -55,9 +57,7 @@ tooltip {
 box.taskbar {
   padding: 8px 8px 0px;
 
-  box.modules_left,
-  box.modules_center,
-  box.modules_right {
+  box.modules {
     background-color: transparent;
   }
 }
@@ -99,7 +99,7 @@ box.packages_wrapper {
     margin: 3px 2px;
     padding: 0px 8px;
     font-style: normal;
-    font-weight: normal;
+    font-weight: bold;
     color: $packages_text_col;
     background-color: $packages_content_bg_col;
     border-radius: 4px;
@@ -122,21 +122,32 @@ box.systray_wrapper {
   }
 }
 
-box.sysstatus_wrapper {
-  padding: 0px 2px;
-  background-color: $sysstatus_bg_col;
+box.brightness,
+box.volume,
+box.battery {
+  padding: 0px 8px;
+  font-style: normal;
+  font-weight: bold;
+  color: $brightness_text_col;
+  background-color: $brightness_bg_col;
   border-radius: 4px;
 
-  box.sysstatus {
-    margin: 3px 2px;
-    padding: 0px 8px;
-    background-color: $sysstatus_content_bg_col;
-    border-radius: 4px;
+  label.percentage {
+    margin-left: 4px;
+  }
 
-    label.battery {
-      font-style: normal;
-      font-weight: normal;
-      color: $sysstatus_text_col;
+  scale {
+    margin-left: 4px;
+
+    trough {
+      min-height: 8px;
+      background-color: $brightness_scale_trough_bg_col;
+      border-radius: 8px;
+
+      highlight {
+        background-image: $brightness_scale_highlight_bg_col;
+        border-radius: 8px;
+      }
     }
   }
 }
@@ -151,5 +162,6 @@ box.time {
 
   label.time_sep {
     margin: 0px 4px;
+    font-size: 4px;
   }
 }
