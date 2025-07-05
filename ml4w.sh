@@ -102,14 +102,16 @@ fi
 
 # clone ml4w repos
 echo ":: Cloning 'ml4w' repository..."
-if [[ -d "$DEST_FOLDER/ml4w" ]]; then
-  rm -rf "$DEST_FOLDER/ml4w"
-  echo ":: Old 'ml4w' folder removed."
-fi
 if $DEV_MODE; then
+  echo ":: Syncing local 'ml4w' repository to '$DEST_FOLDER/ml4w'..."
   rsync -a --exclude '.git' "$(pwd)/" "$DEST_FOLDER/ml4w"
 else
-  git clone --depth 1 https://github.com/wanwanvxt/ml4w.git "$DEST_FOLDER/ml4w"
+  if [[ -d "$DEST_FOLDER/ml4w" ]]; then
+    echo ":: 'ml4w' already exists, pulling latest changes..."
+    git -C "$DEST_FOLDER/ml4w" pull --rebase
+  else
+    git clone --depth 1 https://github.com/wanwanvxt/ml4w.git "$DEST_FOLDER/ml4w"
+  fi
 fi
 echo ":: 'ml4w' repository cloned successfully."
 
