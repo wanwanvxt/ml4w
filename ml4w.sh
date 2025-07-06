@@ -98,4 +98,4 @@ fi
 echo ":: 'ml4w' repository cloned successfully."
 
 cd "$dest_folder/ml4w"
-source ./setup/setup.sh
+source ./scripts/setup.sh
