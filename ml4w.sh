@@ -35,7 +35,7 @@ while true; do
   case "$yn" in
     y|"") break ;;
     n)
-      echo ":: Setup canceled."
+      echo ":: ml4w :: Setup canceled."
       exit
       ;;
     *) echo "Please answer [Y/y]es or [N/n]o." ;;
@@ -44,7 +44,7 @@ done
 
 if [[ ! -d "$download_folder" ]]; then
   mkdir -p "$download_folder"
-  echo ":: '$download_folder' folder created."
+  echo ":: ml4w :: '$download_folder' folder created."
 fi
 
 # sync package databases
@@ -53,42 +53,42 @@ sudo pacman -Sy
 echo
 
 # check and install required packages
-echo ":: Checking for required packages are installed..."
+echo ":: ml4w :: Checking for required packages are installed..."
 need_to_install=()
 for pkg in "${packages[@]}"; do
   if _is_installed_package $pkg; then
-    echo ":: '$pkg' is already installed."
+    echo ":: ml4w :: '$pkg' is already installed."
   else
     need_to_install+=("$pkg")
   fi
 done
 if [[ "${#need_to_install[@]}" -ne 0 ]]; then
-  echo ":: Packages not installed:"
+  echo ":: ml4w :: Packages not installed:"
   printf "\t%s\n" "${need_to_install[@]}"
   sudo pacman --noconfirm -S "${need_to_install[@]}"
 fi
-echo ":: All required packages are installed."
+echo ":: ml4w :: All required packages are installed."
 
 # install yay
-echo ":: This setup requires 'yay' to install AUR packages."
+echo ":: ml4w :: This setup requires 'yay' to install AUR packages."
 if _is_command_exists "yay"; then
-  echo ":: 'yay' is already installed."
+  echo ":: ml4w :: 'yay' is already installed."
 else
   git clone https://aur.archlinux.org/yay.git "$download_folder/yay"
   cd "$download_folder/yay"
   makepkg -si
-  echo ":: 'yay' has been installed successfully."
+  echo ":: ml4w :: 'yay' has been installed successfully."
 fi
 
 # clone ml4w repos
-echo ":: Cloning 'ml4w' repository..."
+echo ":: ml4w :: Cloning 'ml4w' repository..."
 if [[ -d "$download_folder/ml4w/.git" ]]; then
-  echo ":: 'ml4w' already exists, pulling latest changes..."
+  echo ":: ml4w :: 'ml4w' already exists, pulling latest changes..."
   git -C "$download_folder/ml4w" pull --rebase
 else
   git clone --depth 1 https://github.com/wanwanvxt/ml4w.git "$download_folder/ml4w"
 fi
-echo ":: 'ml4w' repository cloned successfully."
+echo ":: ml4w :: 'ml4w' repository cloned successfully."
 
 cd "$download_folder/ml4w"
 source ./scripts/setup.sh
