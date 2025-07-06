@@ -3,7 +3,6 @@
 dev_mode=false
 if [[ "$1" == "--dev" ]]; then
   dev_mode=true
-  echo ":: This mode is for development purposes only."
 fi
 
 dest_folder="$HOME/.ml4w"
@@ -31,7 +30,11 @@ cat <<"EOF"
  \/ by Vũ Xuân Trường     \/
 EOF
 while true; do
-  read -p "Do you want to start the setup now? [Y/n]: " yn
+  if $dev_mode; then
+    read -p "Do you want to start the setup now (Development mode)? [Y/n]: " yn
+  else
+    read -p "Do you want to start the setup now? [Y/n]: " yn
+  fi
   yn=${yn,,}
 
   case "$yn" in
