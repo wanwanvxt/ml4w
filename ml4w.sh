@@ -65,7 +65,7 @@ done
 if [[ "${#need_to_install[@]}" -ne 0 ]]; then
   echo ":: Packages not installed:"
   printf "\t%s\n" "${need_to_install[@]}"
-  sudo pacman -S "${need_to_install[@]}"
+  sudo pacman --noconfirm -S "${need_to_install[@]}"
 fi
 echo ":: All required packages are installed."
 
