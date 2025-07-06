@@ -5,7 +5,7 @@ if [[ "$1" == "--dev" ]]; then
   dev_mode=true
 fi
 
-dest_folder="$HOME/.ml4w"
+download_folder="$HOME/.ml4w"
 packages=(
   "git"
   "base-devel"
@@ -47,9 +47,9 @@ while true; do
   esac
 done
 
-if [[ ! -d "$dest_folder" ]]; then
-  mkdir -p "$dest_folder"
-  echo ":: '$dest_folder' folder created."
+if [[ ! -d "$download_folder" ]]; then
+  mkdir -p "$download_folder"
+  echo ":: '$download_folder' folder created."
 fi
 
 # sync package databases
@@ -79,8 +79,8 @@ echo ":: This setup requires 'yay' to install AUR packages."
 if _is_command_exists "yay"; then
   echo ":: 'yay' is already installed."
 else
-  git clone https://aur.archlinux.org/yay.git "$dest_folder/yay"
-  cd "$dest_folder/yay"
+  git clone https://aur.archlinux.org/yay.git "$download_folder/yay"
+  cd "$download_folder/yay"
   makepkg -si
   echo ":: 'yay' has been installed successfully."
 fi
@@ -88,17 +88,17 @@ fi
 # clone ml4w repos
 echo ":: Cloning 'ml4w' repository..."
 if $dev_mode; then
-  echo ":: Syncing local 'ml4w' repository to '$dest_folder/ml4w'..."
-  rsync -a --exclude '.git' --delete "$(pwd)/" "$dest_folder/ml4w"
+  echo ":: Syncing local 'ml4w' repository to '$download_folder/ml4w'..."
+  rsync -a --exclude '.git' --delete "$(pwd)/" "$download_folder/ml4w"
 else
-  if [[ -d "$dest_folder/ml4w/.git" ]]; then
+  if [[ -d "$download_folder/ml4w/.git" ]]; then
     echo ":: 'ml4w' already exists, pulling latest changes..."
-    git -C "$dest_folder/ml4w" pull --rebase
+    git -C "$download_folder/ml4w" pull --rebase
   else
-    git clone --depth 1 https://github.com/wanwanvxt/ml4w.git "$dest_folder/ml4w"
+    git clone --depth 1 https://github.com/wanwanvxt/ml4w.git "$download_folder/ml4w"
   fi
 fi
 echo ":: 'ml4w' repository cloned successfully."
 
-cd "$dest_folder/ml4w"
+cd "$download_folder/ml4w"
 source ./scripts/setup.sh
