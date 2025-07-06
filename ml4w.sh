@@ -53,7 +53,7 @@ if [[ ! -d "$download_folder" ]]; then
 fi
 
 # sync package databases
-echo ":: Synchronizing package databases..."
+# echo ":: Synchronizing package databases..."
 sudo pacman -Sy
 echo
 
