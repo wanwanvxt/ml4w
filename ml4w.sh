@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-dev_mode=false
-if [[ "$1" == "--dev" ]]; then
-  dev_mode=true
-fi
-
 download_folder="$HOME/.ml4w"
 packages=(
   "git"
@@ -87,16 +82,11 @@ fi
 
 # clone ml4w repos
 echo ":: Cloning 'ml4w' repository..."
-if $dev_mode; then
-  echo ":: Syncing local 'ml4w' repository to '$download_folder/ml4w'..."
-  rsync -a --exclude '.git' --delete "$(pwd)/" "$download_folder/ml4w"
+if [[ -d "$download_folder/ml4w/.git" ]]; then
+  echo ":: 'ml4w' already exists, pulling latest changes..."
+  git -C "$download_folder/ml4w" pull --rebase
 else
-  if [[ -d "$download_folder/ml4w/.git" ]]; then
-    echo ":: 'ml4w' already exists, pulling latest changes..."
-    git -C "$download_folder/ml4w" pull --rebase
-  else
-    git clone --depth 1 https://github.com/wanwanvxt/ml4w.git "$download_folder/ml4w"
-  fi
+  git clone --depth 1 https://github.com/wanwanvxt/ml4w.git "$download_folder/ml4w"
 fi
 echo ":: 'ml4w' repository cloned successfully."
 
