@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
 
-DEV_MODE=false
+dev_mode=false
 if [[ "$1" == "--dev" ]]; then
-  DEV_MODE=true
+  dev_mode=true
   echo ":: This mode is for development purposes only."
 fi
 
-DEST_FOLDER="$HOME/.ml4w"
-PACKAGES=(
+dest_folder="$HOME/.ml4w"
+packages=(
   "git"
   "base-devel"
   "rsync"
+  "gum"
 )
 
 _is_installed_package() {
@@ -21,50 +22,31 @@ _is_command_exists() {
   command -v "$1" &>/dev/null
 }
 
-_confirm() {
-  local question="$1"
-  local default="${2,,}"
-  local yn
-  local prompt
-
-  case "$default" in
-    y) prompt=" [Y/n]: " ;;
-    n) prompt=" [y/N]: " ;;
-    *) prompt=" [y/n]: " ;;
-  esac
-
-  while true; do
-    read -p "$question$prompt" yn
-    yn=${yn,,}
-
-    if [[ -z "$yn" ]];then
-      yn="$default"
-    fi
-
-    case "$yn" in
-      y) return 0 ;;
-      n) return 1 ;;
-      *) echo "Please answer [Y/y]es or [N/n]o." ;;
-    esac
-  done
-}
-
 cat <<"EOF"
-         __   ____  __      __
-  _____ |  | / |  |/  \    /  \
- /     \|  |/  ^  |\   \/\/   /
-/  Y Y  |  |___    /\        /
-\  |_|__|_____/|__|  \__/\  /
+         __   _____ __      __
+  _____ |  | /  |  /  \    /  \
+ /     \|  |/   ^  \__ \/\/   /
+/  Y Y  \  |____    _/       /
+\  |_|__/______/|__| \__/\  /
  \/ by Vũ Xuân Trường     \/
 EOF
-if ! _confirm "Do you want to start the setup now?" "y"; then
-  echo ":: Setup canceled."
-  exit
-fi
+while true; do
+  read -p "Do you want to start the setup now? [Y/n]: " yn
+  yn=${yn,,}
 
-if [[ ! -d "$DEST_FOLDER" ]]; then
-  mkdir -p "$DEST_FOLDER"
-  echo ":: '$DEST_FOLDER' folder created."
+  case "$yn" in
+    y|"") break ;;
+    n)
+      echo ":: Setup canceled."
+      exit
+      ;;
+    *) echo "Please answer [Y/y]es or [N/n]o." ;;
+  esac
+done
+
+if [[ ! -d "$dest_folder" ]]; then
+  mkdir -p "$dest_folder"
+  echo ":: '$dest_folder' folder created."
 fi
 
 # sync package databases
@@ -75,7 +57,7 @@ echo
 # check and install required packages
 echo ":: Checking for required packages are installed..."
 need_to_install=()
-for pkg in "${PACKAGES[@]}"; do
+for pkg in "${packages[@]}"; do
   if _is_installed_package $pkg; then
     echo ":: '$pkg' is already installed."
   else
@@ -94,31 +76,26 @@ echo ":: This setup requires 'yay' to install AUR packages."
 if _is_command_exists "yay"; then
   echo ":: 'yay' is already installed."
 else
-  git clone https://aur.archlinux.org/yay.git "$DEST_FOLDER/yay"
-  cd "$DEST_FOLDER/yay"
+  git clone https://aur.archlinux.org/yay.git "$dest_folder/yay"
+  cd "$dest_folder/yay"
   makepkg -si
   echo ":: 'yay' has been installed successfully."
 fi
 
 # clone ml4w repos
 echo ":: Cloning 'ml4w' repository..."
-if $DEV_MODE; then
-  echo ":: Syncing local 'ml4w' repository to '$DEST_FOLDER/ml4w'..."
-  rsync -a --exclude '.git' "$(pwd)/" "$DEST_FOLDER/ml4w"
+if $dev_mode; then
+  echo ":: Syncing local 'ml4w' repository to '$dest_folder/ml4w'..."
+  rsync -a --exclude '.git' --delete "$(pwd)/" "$dest_folder/ml4w"
 else
-  if [[ -d "$DEST_FOLDER/ml4w" ]]; then
+  if [[ -d "$dest_folder/ml4w/.git" ]]; then
     echo ":: 'ml4w' already exists, pulling latest changes..."
-    git -C "$DEST_FOLDER/ml4w" pull --rebase
+    git -C "$dest_folder/ml4w" pull --rebase
   else
-    git clone --depth 1 https://github.com/wanwanvxt/ml4w.git "$DEST_FOLDER/ml4w"
+    git clone --depth 1 https://github.com/wanwanvxt/ml4w.git "$dest_folder/ml4w"
   fi
 fi
 echo ":: 'ml4w' repository cloned successfully."
 
-cd "$DEST_FOLDER/ml4w"
-if _confirm "Are you using NVIDIA GPU?" "n"; then
-  USE_NVIDIA=true
-else
-  USE_NVIDIA=false
-fi
+cd "$dest_folder/ml4w"
 source ./setup/setup.sh
