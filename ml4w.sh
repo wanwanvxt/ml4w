@@ -1,94 +1,221 @@
 #!/usr/bin/env bash
 
-download_folder="$HOME/.ml4w"
+localmode=$([[ $1 == "--local" ]] && echo "true" || echo "false")
+echo_prefix=":: ml4w ::"
+dist_dir="$HOME/.ml4w"
 packages=(
-  "git"
-  "base-devel"
+  "noto-fonts"
+  "noto-fonts-cjk"
+  "noto-fonts-emoji"
+  "noto-fonts-extra"
+  "papirus-icon-theme"
+
+  "hyprland"
+  "hyprpaper"
+  "qt5-wayland"
+  "qt6-wayland"
+  "xdg-desktop-portal"
+  "xdg-desktop-portal-gtk"
+  "xdg-desktop-portal-hyprland"
+  "xdg-user-dirs"
+  "polkit"
+
+  "networkmanager"
+  "libnotify"
+  "wireplumber"
+  "playerctl"
+  "brightnessctl"
+  "bluez"
+  "bluez-utils"
+  "cliphist"
+  "grim"
+  "slurp"
+  "bash-completion"
+  "fastfetch"
+  "jq"
+  "awk"
+  "eza"
+  "ffmpeg"
+  "7zip"
+  "unrar"
   "rsync"
   "gum"
+
+  "cmake"
+  "ninja"
+  "clang"
+  "python-pip"
+  "rustup"
+  "odin"
+  "go"
+
+  "kitty"
+  "dolphin"
+  "ark"
+  "btop"
+  "nvtop"
+  "firefox"
+  "obs-studio"
+  "vlc"
+  "imagemagick"
+  "fcitx5"
+  "fcitx5-unikey"
+)
+aur_packages=(
+  "maplemono-ttf"
+  "bibata-cursor-theme"
+
+  "adwaita-qt5-git"
+  "adwaita-qt6-git"
+
+  "visual-studio-code-bin"
+  "quickshell-git"
+  "freedownloadmanager"
 )
 
-_is_installed_package() {
+_check_installed_package() {
   pacman -Q "$1" &>/dev/null
 }
 
-_is_command_exists() {
+_check_installed_package_with_yay() {
+  yay -Q "$1" &>/dev/null
+}
+
+_check_command_exists() {
   command -v "$1" &>/dev/null
 }
 
-cat <<"EOF"
-         __   _____ __      __
-  _____ |  | /  |  /  \    /  \
- /     \|  |/   ^  \__ \/\/   /
-/  Y Y  \  |____    _/       /
-\  |_|__/______/|__| \__/\  /
- \/ by Vũ Xuân Trường     \/
+_install_packages() {
+  local need_to_install=()
+  for pkg in "$@"; do
+    if _check_installed_package $pkg; then
+      echo "$echo_prefix '$pkg' is already installed."
+    else
+      need_to_install+=("$pkg")
+    fi
+  done
+  if [[ "${#need_to_install[@]}" -ne 0 ]]; then
+    echo "$echo_prefix Packages not installed:"
+    printf "\t%s\n" "${need_to_install[@]}"
+    sudo pacman --noconfirm -S "${need_to_install[@]}"
+  fi
+}
+
+_install_packages_with_yay() {
+  local need_to_install=()
+  for pkg in "$@"; do
+    if _check_installed_package_with_yay $pkg; then
+      echo "$echo_prefix '$pkg' is already installed."
+    else
+      need_to_install+=("$pkg")
+    fi
+  done
+  if [[ "${#need_to_install[@]}" -ne 0 ]]; then
+    echo "$echo_prefix Packages not installed:"
+    printf "\t%s\n" "${need_to_install[@]}"
+    yay --noconfirm -S "${need_to_install[@]}"
+  fi
+}
+
+_install_yay() {
+  if _check_command_exists "yay"; then
+    echo "$echo_prefix 'yay' is already installed."
+    return
+  fi
+
+  git clone https://aur.archlinux.org/yay.git "$dist_dir/yay"
+  cd "$dist_dir/yay"
+  makepkg -si
+  cd - &>/dev/null
+}
+
+_clone_ml4w_repo() {
+  if [[ $localmode == "true" ]]; then
+    echo "$echo_prefix Using local mode, copying files..."
+    local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    rsync -av --exclude=".git/" "$script_dir/" "$dist_dir/ml4w/"
+  else
+    if [[ -d "$dist_dir/ml4w" ]]; then
+      rm -rf "$dist_dir/ml4w"
+      echo "$echo_prefix Removed old 'ml4w' directory."
+    fi
+    git clone --depth 1 https://github.com/wanwanvxt/ml4w.git "$dist_dir/ml4w"
+  fi
+}
+
+# === MAIN SCRIPT ===
+
+cat <<EOF
+         ______
+  __ _  / / / /_    __
+ /  ' \/ /_  _/ |/|/ /
+/_/_/_/_/ /_/ |__,__/ by Vũ Xuân Trường
+
 EOF
 while true; do
-  if $dev_mode; then
-    read -p "Do you want to start the setup now (Development mode)? [Y/n]: " yn
+  if [[ $localmode == "true" ]] then
+    read -p "$echo_prefix Start the setup now (Local mode)? [Y/n]: " yn
   else
-    read -p "Do you want to start the setup now? [Y/n]: " yn
+    read -p "$echo_prefix Start the setup now? [Y/n]: " yn
   fi
   yn=${yn,,}
 
   case "$yn" in
     y|"") break ;;
-    n)
-      echo ":: ml4w :: Setup canceled."
-      exit
-      ;;
-    *) echo "Please answer [Y/y]es or [N/n]o." ;;
+    n) exit ;;
+    *) echo "$echo_prefix Please answer [Y/y]es or [N/n]o." ;;
   esac
 done
 
-if [[ ! -d "$download_folder" ]]; then
-  mkdir -p "$download_folder"
-  echo ":: ml4w :: '$download_folder' folder created."
+if [[ ! -d "$dist_dir" ]]; then
+  mkdir -p "$dist_dir"
+  echo "$echo_prefix Created '$dist_dir' directory."
 fi
 
-# sync package databases
-# echo ":: Synchronizing package databases..."
-sudo pacman -Sy
+# sync and update
+echo "$echo_prefix Synchronizing and updating installed packages..."
+sudo pacman -Syu
+echo
+
+# install yay
+echo "$echo_prefix This setup requires 'yay' to manage packages."
+echo "$echo_prefix Checking for 'base-devel' and 'git' packages..."
+_install_packages "base-devel" "git"
+echo "$echo_prefix 'base-devel' and 'git' packages are installed."
+_install_yay
+echo "$echo_prefix 'yay' is installed."
+
+# sync and update again
+echo "$echo_prefix Synchronizing and updating installed packages again with 'yay'..."
+yay
 echo
 
 # check and install required packages
-echo ":: ml4w :: Checking for required packages are installed..."
-need_to_install=()
-for pkg in "${packages[@]}"; do
-  if _is_installed_package $pkg; then
-    echo ":: ml4w :: '$pkg' is already installed."
-  else
-    need_to_install+=("$pkg")
-  fi
-done
-if [[ "${#need_to_install[@]}" -ne 0 ]]; then
-  echo ":: ml4w :: Packages not installed:"
-  printf "\t%s\n" "${need_to_install[@]}"
-  sudo pacman --noconfirm -S "${need_to_install[@]}"
-fi
-echo ":: ml4w :: All required packages are installed."
+echo "$echo_prefix Checking for required packages..."
+_install_packages_with_yay "${packages[@]}" "${aur_packages[@]}"
+echo "$echo_prefix All required packages are installed."
 
-# install yay
-echo ":: ml4w :: This setup requires 'yay' to install AUR packages."
-if _is_command_exists "yay"; then
-  echo ":: ml4w :: 'yay' is already installed."
-else
-  git clone https://aur.archlinux.org/yay.git "$download_folder/yay"
-  cd "$download_folder/yay"
-  makepkg -si
-  echo ":: ml4w :: 'yay' has been installed successfully."
+use_nvidia=$(gum confirm --default="no" "Using NVIDIA GPU?" && echo "true" || echo "false")
+if [[ $use_nvidia == "true" ]]; then
+  _install_packages_with_yay "nvidia-open" "nvidia-utils" "nvidia-settings" "egl-wayland"
+  sudo bash -c 'echo "nvidia-drm.modeset=1" > /etc/modprobe.d/nvidia-drm.conf'
+  echo "$echo_prefix NVIDIA packages are installed and configured."
 fi
 
 # clone ml4w repos
-echo ":: ml4w :: Cloning 'ml4w' repository..."
-if [[ -d "$download_folder/ml4w/.git" ]]; then
-  echo ":: ml4w :: 'ml4w' already exists, pulling latest changes..."
-  git -C "$download_folder/ml4w" pull --rebase
-else
-  git clone --depth 1 https://github.com/wanwanvxt/ml4w.git "$download_folder/ml4w"
-fi
-echo ":: ml4w :: 'ml4w' repository cloned successfully."
+echo "$echo_prefix Cloning 'ml4w' repository..."
+_clone_ml4w_repo
+echo "$echo_prefix 'ml4w' repository cloned successfully."
 
-cd "$download_folder/ml4w"
-source ./scripts/setup.sh
+# setting up xdg user dirs
+echo "$echo_prefix Setting up XDG user directories..."
+xdg-user-dirs-update --force
+echo "$echo_prefix XDG user directories are set up."
+
+# install dotfiles
+echo "$echo_prefix Installing dotfiles..."
+source "$dist_dir/ml4w/share/dotfiles/install.sh"
+echo "$echo_prefix Dotfiles installed successfully."
+
+echo "$echo_prefix ALL DONE!"
+echo "$echo_prefix Please restart system to apply changes."
