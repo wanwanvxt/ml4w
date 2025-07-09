@@ -44,6 +44,7 @@ packages=(
 
   "cmake"
   "ninja"
+  "meson"
   "clang"
   "python-pip"
   "rustup"
