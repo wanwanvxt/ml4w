@@ -8,6 +8,7 @@ packages=(
   "noto-fonts-cjk"
   "noto-fonts-emoji"
   "noto-fonts-extra"
+  "ttf-liberation"
   "papirus-icon-theme"
 
   "hyprland"
