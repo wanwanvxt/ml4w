@@ -62,7 +62,10 @@ packages=(
   "vlc"
   "imagemagick"
   "fcitx5"
+  "fcitx5-gtk"
+  "fcitx5-qt"
   "fcitx5-unikey"
+  "fcitx5-configtool"
 )
 aur_packages=(
   "maplemono-ttf"
