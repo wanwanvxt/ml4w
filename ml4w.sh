@@ -51,6 +51,7 @@ packages=(
   "odin"
   "go"
 
+  "qt6ct"
   "kitty"
   "dolphin"
   "ark"
