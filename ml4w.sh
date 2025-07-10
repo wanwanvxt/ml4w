@@ -203,7 +203,7 @@ echo "$echo_prefix All required packages are installed."
 
 use_nvidia=$(gum confirm --default="no" "Using NVIDIA GPU?" && echo "true" || echo "false")
 if [[ $use_nvidia == "true" ]]; then
-  _install_packages_with_yay "nvidia-open" "nvidia-utils" "nvidia-settings" "egl-wayland"
+  _install_packages_with_yay "nvidia-open" "nvidia-utils" "egl-wayland"
   sudo bash -c 'echo "nvidia-drm.modeset=1" > /etc/modprobe.d/nvidia-drm.conf'
   echo "$echo_prefix NVIDIA packages are installed and configured."
 fi
