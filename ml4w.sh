@@ -68,7 +68,7 @@ packages=(
   "fcitx5-configtool"
 )
 aur_packages=(
-  "maplemono-ttf"
+  "maplemono-nf"
   "bibata-cursor-theme"
 
   "adwaita-qt5-git"
