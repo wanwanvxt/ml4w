@@ -75,7 +75,7 @@ aur_packages=(
   "adwaita-qt6-git"
 
   "visual-studio-code-bin"
-  "quickshell-git"
+  "eww-git"
   "freedownloadmanager"
 )
 
