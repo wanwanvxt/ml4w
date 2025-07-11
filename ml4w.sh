@@ -79,48 +79,20 @@ aur_packages=(
   "freedownloadmanager"
 )
 
-_check_installed_package() {
-  pacman -Q "$1" &>/dev/null
-}
-
-_check_installed_package_with_yay() {
-  yay -Q "$1" &>/dev/null
-}
-
 _check_command_exists() {
   command -v "$1" &>/dev/null
 }
 
 _install_packages() {
-  local need_to_install=()
   for pkg in "$@"; do
-    if _check_installed_package $pkg; then
-      echo "$echo_prefix '$pkg' is already installed."
-    else
-      need_to_install+=("$pkg")
-    fi
+    sudo pacman --noconfirm --needed -S "${need_to_install[@]}"
   done
-  if [[ "${#need_to_install[@]}" -ne 0 ]]; then
-    echo "$echo_prefix Packages not installed:"
-    printf "\t%s\n" "${need_to_install[@]}"
-    sudo pacman --noconfirm -S "${need_to_install[@]}"
-  fi
 }
 
 _install_packages_with_yay() {
-  local need_to_install=()
   for pkg in "$@"; do
-    if _check_installed_package_with_yay $pkg; then
-      echo "$echo_prefix '$pkg' is already installed."
-    else
-      need_to_install+=("$pkg")
-    fi
+    yay --noconfirm --needed -S "${need_to_install[@]}"
   done
-  if [[ "${#need_to_install[@]}" -ne 0 ]]; then
-    echo "$echo_prefix Packages not installed:"
-    printf "\t%s\n" "${need_to_install[@]}"
-    yay --noconfirm -S "${need_to_install[@]}"
-  fi
 }
 
 _install_yay() {
