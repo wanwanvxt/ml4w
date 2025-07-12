@@ -70,6 +70,7 @@ packages=(
 )
 aur_packages=(
   "maplemono-nf"
+  "ttf-phosphor-icons"
   "bibata-cursor-theme"
 
   "adwaita-qt5-git"
