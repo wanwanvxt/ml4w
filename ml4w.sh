@@ -69,6 +69,7 @@ packages=(
   "fcitx5-configtool"
 )
 aur_packages=(
+  "maplemono-ttf"
   "maplemono-nf"
   "ttf-phosphor-icons"
   "bibata-cursor-theme"
