@@ -41,6 +41,7 @@ packages=(
   "unrar"
   "rsync"
   "gum"
+  "yt-dlp"
 
   "cmake"
   "ninja"
