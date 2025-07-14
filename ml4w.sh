@@ -66,7 +66,7 @@ packages=(
   "fcitx5"
   "fcitx5-gtk"
   "fcitx5-qt"
-  "fcitx5-unikey"
+  "fcitx5-bamboo"
   "fcitx5-configtool"
 )
 aur_packages=(
