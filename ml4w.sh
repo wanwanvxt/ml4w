@@ -184,6 +184,12 @@ if [[ $use_nvidia == "true" ]]; then
   echo "$echo_prefix NVIDIA packages are installed and configured."
 fi
 
+# enable and start services
+echo "$echo_prefix Enabling and starting required services..."
+sudo systemctl enable --now NetworkManager.service
+sudo systemctl enable --now bluetooth.service
+echo "$echo_prefix All required services are enabled and started."
+
 # clone ml4w repos
 echo "$echo_prefix Cloning 'ml4w' repository..."
 _clone_ml4w_repo
