@@ -51,6 +51,9 @@ packages=(
   "rustup"
   "odin"
   "go"
+  "nodejs"
+  "npm"
+  "pnpm"
 
   "qt6ct"
   "kitty"
