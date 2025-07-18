@@ -82,7 +82,7 @@ aur_packages=(
   "adwaita-qt6-git"
 
   "visual-studio-code-bin"
-  "eww-git"
+  "quickshell-git"
   "freedownloadmanager"
 )
 
