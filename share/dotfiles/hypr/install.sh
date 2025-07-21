@@ -3,8 +3,8 @@ if [[ $use_nvidia != "true" || $use_nvidia != "false" ]]; then
 fi
 
 rsync -av --delete \
-  --exclude "install.sh" \
-  --exclude "conf/custom.conf" \
+  --exclude "/install.sh" \
+  --exclude "/conf/custom.conf" \
   "$dotfiles_dir/hypr/" "$user_config_dir/hypr/"
 
 if [[ ! -f "$user_config_dir/hypr/conf/custom.conf" ]]; then
