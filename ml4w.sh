@@ -187,6 +187,13 @@ if [[ $use_nvidia == "true" ]]; then
   echo "$echo_prefix NVIDIA packages are installed and configured."
 fi
 
+use_razer=$(gum confirm --default="no" "Using Razer devices?" && echo "true" || echo "false")
+if [[ $use_razer == "true" ]]; then
+  _install_packages_with_yay "openrazer-daemon" "polychromatic"
+  sudo gpasswd -a $USER plugdev
+  echo "$echo_prefix Razer packages are installed and configured."
+fi
+
 # enable and start services
 echo "$echo_prefix Enabling and starting required services..."
 sudo systemctl enable --now NetworkManager.service
