@@ -17,11 +17,9 @@ MouseArea {
   onClicked: event => {
     switch (event.button) {
     case Qt.LeftButton:
-      console.log("left");
       trayItem.activate();
       break;
     case Qt.RightButton:
-      console.log("right");
       if (trayItem.hasMenu)
         trayMenu.open();
       break;
