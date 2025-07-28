@@ -34,6 +34,7 @@ packages=(
   "bash-completion"
   "fastfetch"
   "jq"
+  "jc"
   "awk"
   "eza"
   "ffmpeg"
